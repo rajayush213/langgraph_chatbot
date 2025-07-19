@@ -29,9 +29,10 @@ if st.button("Send") and user_input:
             params = {}
             if st.session_state.checkpoint_id:
                 params["checkpoint_id"] = st.session_state.checkpoint_id
-
+                url = f"{endpoint}?{params['checkpoint_id']}"
+            else:
+                url = f"{endpoint}"
             # response = requests.get(endpoint, params=params, stream=True)
-            url = f"{endpoint}?{params['checkpoint_id']}"
             print(url)
             # client = sseclient.SSEClient(response)
             client = sseclient.SSEClient(url)
