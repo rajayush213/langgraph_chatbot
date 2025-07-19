@@ -153,14 +153,14 @@ async def generate_chat_responses(message: str, checkpoint_id: Optional[str] = N
             yield f"data: {{\"type\": \"content\", \"content\": \"{safe_content}\"}}\n\n"
         elif event_type == "on_chat_model_end":
             tool_calls = event["data"]["output"].tool_calls if hasattr(event["data"]["output"], "tool_calls") else []
-            search_calls = [call for call in tool_calls if call["name"] == "tavily_search_results_json"]
+            search_calls = [call for call in tool_calls if call["name"] == "tavily_search"]
             if search_calls:
                 # Signal that a search is starting
                 search_query = search_calls[0]["args"].get("query", "")
                 # Escape quotes and special characters
                 safe_query = search_query.replace('"', '\\"').replace("'", "\\'").replace("\n", "\\n")
                 yield f"data: {{\"type\": \"search_start\", \"query\": \"{safe_query}\"}}\n\n"
-        elif event_type == "on_tool_end" and event["name"] == "tavily_search_results_json":
+        elif event_type == "on_tool_end" and event["name"] == "tavily_search":
             # Search completed - send results or error
             output = event["data"]["output"]
             
