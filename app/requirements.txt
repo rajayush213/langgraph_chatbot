@@ -2,7 +2,6 @@ fastapi
 uvicorn
 pydantic
 python-dotenv
-streamlit
 langgraph
 langchain
 langchain_groq
@@ -10,5 +9,3 @@ langchain-google-genai
 grandalf
 python_dotenv
 langchain_community
-fastapi
-sseclient
