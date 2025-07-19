@@ -14,7 +14,7 @@ if "messages" not in st.session_state:
 if "checkpoint_id" not in st.session_state:
     st.session_state.checkpoint_id = None
 
-st.title("🤖 LangGraph Chatbot (Streaming with Tools)")
+st.title("🤖 Zemo Chatbot (Only search tool is available for now)")
 
 user_input = st.text_input("Type your message:", key="user_message")
 

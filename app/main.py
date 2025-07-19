@@ -3,7 +3,8 @@ from langgraph.graph import add_messages, StateGraph, END
 from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 from langchain_core.messages import HumanMessage, AIMessageChunk, ToolMessage
-from langchain_community.tools.tavily_search import TavilySearchResults
+# from langchain_community.tools.tavily_search import TavilySearchResults
+from langchain_tavily import TavilySearch
 from langgraph.checkpoint.memory import MemorySaver
 from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 from fastapi import FastAPI, Query
@@ -17,7 +18,14 @@ load_dotenv()
 
 model = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
 
-search_tool = TavilySearchResults(max_results=4)
+# Instantiate the modern version
+search_tool = TavilySearch(
+    max_results=5,
+    include_answer=True,
+    include_raw_content=True,
+    include_images=False,
+)
+
 tools = [search_tool]
 
 memory = MemorySaver()
@@ -57,10 +65,11 @@ async def tool_node(state):
         tool_id = tool_call["id"]
         
         # Handle the search tool
-        if tool_name == "tavily_search_results_json":
+        if tool_name == "tavily_search":
             # Execute the search tool with the provided arguments
             search_results = await search_tool.ainvoke(tool_args)
-            
+            if not search_results:
+                continue
             # Create a ToolMessage for this result
             tool_message = ToolMessage(
                 content=str(search_results),
