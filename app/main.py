@@ -171,6 +171,11 @@ async def generate_chat_responses(message: str, checkpoint_id: Optional[str] = N
     yield f"data: {{\"type\": \"end\"}}\n\n"
 
 
+@app.get("/")
+def root():
+    return {"message": "Welcome to the root route!"}
+
+
 @app.get("/chat_stream/{message}")
 async def chat_stream(message: str, checkpoint_id: Optional[str] = Query(None)):
     return StreamingResponse(
