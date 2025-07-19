@@ -9,7 +9,7 @@ from langgraph.checkpoint.memory import MemorySaver
 from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import RedirectResponse, StreamingResponse
 
 from uuid import uuid4
 import json
@@ -182,7 +182,8 @@ async def generate_chat_responses(message: str, checkpoint_id: Optional[str] = N
 
 @app.get("/")
 def root():
-    return {"message": "Welcome to the root route!"}
+    """Currently redirecting to swagger page"""
+    return RedirectResponse("/docs")
 
 
 @app.get("/chat_stream/{message}")
@@ -194,6 +195,7 @@ async def chat_stream(message: str, checkpoint_id: Optional[str] = Query(None)):
             "Cache-Control": "no-cache",
             "Connection": "keep-alive",
             "X-Accel-Buffering": "no",
+            "x-vercel-ai-data-stream": "v1"
         },
     )
 
